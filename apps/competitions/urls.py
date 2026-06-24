@@ -1,5 +1,10 @@
 from django.urls import path
-from apps.competitions.views import DownloadTemplateView, UploadApplicationView
+from apps.competitions.views import (
+    DownloadTemplateView,
+    UploadApplicationView,
+    FormHeatsView,
+    ViewHeatsView,
+)
 
 urlpatterns = [
     path(
@@ -12,4 +17,15 @@ urlpatterns = [
         UploadApplicationView.as_view(),
         name='upload_application'
     ),
+    path(
+        '<int:competition_id>/form-heats/',
+        FormHeatsView.as_view(),
+        name='form_heats'
+    ),
+    path(
+        '<int:competition_id>/heats/',
+        ViewHeatsView.as_view(),
+        name='view_heats'
+    ),
 ]
+

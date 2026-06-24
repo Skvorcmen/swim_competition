@@ -5,6 +5,8 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from apps.competitions.utils import generate_application_template, parse_application_excel
 from apps.competitions.models import Competition, Application
+from apps.competitions.services import form_heats_for_competition
+
 
 
 class DownloadTemplateView(LoginRequiredMixin, View):
@@ -75,4 +77,34 @@ class UploadApplicationView(LoginRequiredMixin, View):
             'success': result['success'],
             'errors': result['errors'],
             'athletes': result['athletes'],
+        })
+
+
+
+class FormHeatsView(LoginRequiredMixin, View):
+
+    def post(self, request, competition_id):
+        competition = get_object_or_404(Competition, id=competition_id)
+
+        form_heats_for_competition(competition)
+
+        messages.success(request, 'Заплывы успешно сформированы.')
+        return redirect('view_heats', competition_id=competition_id)
+
+
+class ViewHeatsView(LoginRequiredMixin, View):
+
+    def get(self, request, competition_id):
+        competition = get_object_or_404(Competition, id=competition_id)
+
+        from apps.competitions.models import Heat
+        heats = Heat.objects.filter(
+            event__competition=competition
+        ).select_related('event').prefetch_related(
+            'heatlane_set__athlete_event__athlete'
+        ).order_by('number')
+
+        return render(request, 'competitions/view_heats.html', {
+            'competition': competition,
+            'heats': heats,
         })
