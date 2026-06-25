@@ -4,6 +4,7 @@ from apps.competitions.views import (
     UploadApplicationView,
     FormHeatsView,
     ViewHeatsView,
+    EnterResultsView,
 )
 
 urlpatterns = [
@@ -26,6 +27,11 @@ urlpatterns = [
         '<int:competition_id>/heats/',
         ViewHeatsView.as_view(),
         name='view_heats'
+    ),
+    path(
+        'heat/<int:heat_id>/enter-results/',
+        EnterResultsView.as_view(),
+        name='enter_results'
     ),
 ]
 
