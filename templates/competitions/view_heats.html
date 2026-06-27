@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Заплывы — {{ competition.name }}</title>
+</head>
+<body>
+    <h1>Заплывы — {{ competition.name }}</h1>
+
+    {% for heat in heats %}
+    <h2>Заплыв {{ heat.number }} — {{ heat.event }} ({{ heat.get_status_display }})</h2>
+    <a href="{% url 'enter_results' heat.id %}">Ввести результаты</a>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Дорожка</th>
+            <th>Спортсмен</th>
+            <th>Команда</th>
+            <th>Предвремя</th>
+        </tr>
+        {% for lane in heat.heatlane_set.all %}
+        <tr>
+            <td>{{ lane.lane }}</td>
+            <td>{{ lane.athlete_event.athlete }}</td>
+            <td>{{ lane.athlete_event.athlete.team }}</td>
+            <td>{{ lane.athlete_event.preliminary_time|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'event_results' heat.event.id %}">Посмотреть итоговые результаты категории</a>
+    <br>
+    {% endfor %}
+</body>
+</html>

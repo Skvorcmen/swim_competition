@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Подача заявки — {{ competition.name }}</title>
+</head>
+<body>
+    <h1>Подача заявки на {{ competition.name }}</h1>
+    <p>Дата: {{ competition.date }}</p>
+    <p>Место: {{ competition.location }}</p>
+
+    <h2>Шаг 1 — Скачайте шаблон</h2>
+    <a href="{% url 'download_template' competition.id %}">
+        Скачать шаблон Excel
+    </a>
+
+    <h2>Шаг 2 — Заполните и загрузите</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="excel_file" accept=".xlsx">
+        <button type="submit">Загрузить заявку</button>
+    </form>
+    <h2>Сформировать заплывы</h2>
+    <form method="post" action="{% url 'form_heats' competition.id %}">
+        {% csrf_token %}
+        <button type="submit">Сформировать заплывы</button>
+    </form>
+</body>
+</html>

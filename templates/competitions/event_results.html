@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Результаты — {{ event }}</title>
+</head>
+<body>
+    <h1>Результаты — {{ event }}</h1>
+
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>Место</th>
+            <th>Спортсмен</th>
+            <th>Время</th>
+            <th>Заплыв</th>
+            <th>Дорожка</th>
+        </tr>
+        {% for result in results %}
+        <tr>
+            <td><strong>{{ result.place|default:"—" }}</strong></td>
+            <td>{{ result.athlete }}</td>
+            <td>
+                {% if result.status %}
+                <span style="color: red;">{{ result.status }}</span>
+                {% else %}
+                {{ result.time }}
+                {% endif %}
+            </td>
+            <td>{{ result.heat_number }}</td>
+            <td>{{ result.lane }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
