@@ -171,3 +171,21 @@ class EnterResultsView(LoginRequiredMixin, View):
 
         messages.success(request, f'Результаты заплыва {heat.number} сохранены.')
         return redirect('view_heats', competition_id=heat.event.competition.id)
+
+class EventResultsView(LoginRequiredMixin, View):
+
+    def get(self, request, event_id):
+        from apps.competitions.models import Event
+        from apps.competitions.services import calculate_results_for_event
+
+        event = get_object_or_404(Event, id=event_id)
+        results = calculate_results_for_event(event)
+
+        if results is None:
+            messages.warning(request, 'Не все заплывы этой категории завершены.')
+            return redirect('view_heats', competition_id=event.competition.id)
+
+        return render(request, 'competitions/event_results.html', {
+            'event': event,
+            'results': results,
+        })
